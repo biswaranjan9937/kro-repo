@@ -4,4 +4,4 @@ metadata:
   name: my-app
 spec:
   name: my-app
-  replicas: 3
+  replicas: 5
