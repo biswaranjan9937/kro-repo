@@ -53,6 +53,5 @@ spec:
       kind: Bucket
       metadata:
         name: test-bucket
-        namespace: default
       spec:
         name: my-uni-buk-name-124
