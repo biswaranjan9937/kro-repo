@@ -1,0 +1,55 @@
+apiVersion: kro.run/v1alpha1
+kind: ResourceGraphDefinition
+metadata:
+  name: webapplication
+spec:
+  schema:
+    apiVersion: v1alpha1
+    kind: WebApplication
+    group: kro.run
+    spec:
+      name: string | required=true
+      image: string | default="nginx:latest"
+      replicas: integer | default=3
+  resources:
+  - id: deployment
+    template:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: ${schema.spec.name}
+      spec:
+        replicas: ${schema.spec.replicas}
+        selector:
+          matchLabels:
+            app: ${schema.spec.name}
+        template:
+          metadata:
+            labels:
+              app: ${schema.spec.name}
+          spec:
+            containers:
+            - name: app
+              image: ${schema.spec.image}
+              ports:
+              - containerPort: 80
+  - id: service
+    template:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: ${schema.spec.name}
+      spec:
+        selector:
+          app: ${schema.spec.name}
+        ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+
+  - id: bucket
+    template:
+      apiVersion: s3.services.k8s.aws/v1alpha1
+      kind: Bucket
+      spec:
+        name: ${schema.spec.name}-data
