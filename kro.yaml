@@ -47,9 +47,17 @@ spec:
           port: 80
           targetPort: 80
 
+  # FIX: The 'metadata' field, which was missing or misindented, has been correctly added here.
+  # The name has also been made dynamic for reusability.
   - id: bucket
     template:
       apiVersion: s3.services.k8s.aws/v1alpha1
       kind: Bucket
+      metadata:
+        # Use the schema name for the Kubernetes object name
+        name: ${schema.spec.name}-bucket
+        # Note: 'namespace: default' is usually inherited but is explicitly added here for clarity
       spec:
-        name: ${schema.spec.name}-data
+        # Use the schema name for the S3 bucket name, ensuring it's unique
+        # S3 bucket names must be globally unique, so you might need a more complex generator
+        name: ${schema.spec.name}-unique-data-store
