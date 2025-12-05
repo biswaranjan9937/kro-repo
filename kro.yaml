@@ -19,7 +19,8 @@ spec:
       metadata:
         name: ${schema.spec.name}
       spec:
-        replicas: ${schema.spec.replicas}
+        # FIX: Quoting the dynamic variable for the integer field 'replicas'
+        replicas: "${schema.spec.replicas}"
         selector:
           matchLabels:
             app: ${schema.spec.name}
@@ -46,18 +47,11 @@ spec:
         - protocol: TCP
           port: 80
           targetPort: 80
-
-  # FIX: The 'metadata' field, which was missing or misindented, has been correctly added here.
-  # The name has also been made dynamic for reusability.
   - id: bucket
     template:
       apiVersion: s3.services.k8s.aws/v1alpha1
       kind: Bucket
       metadata:
-        # Use the schema name for the Kubernetes object name
-        name: ${schema.spec.name}-bucket
-        # Note: 'namespace: default' is usually inherited but is explicitly added here for clarity
+        name: test-bucket
       spec:
-        # FIX: Appending the parent WebApplication's Unique ID (metadata.uid) to the S3 name 
-        # guarantees global uniqueness, preventing the S3 creation failure.
-        name: ${schema.spec.name}-${metadata.uid}
+        name: my-uniq-buk-name-124
