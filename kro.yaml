@@ -58,6 +58,6 @@ spec:
         name: ${schema.spec.name}-bucket
         # Note: 'namespace: default' is usually inherited but is explicitly added here for clarity
       spec:
-        # Use the schema name for the S3 bucket name, ensuring it's unique
-        # S3 bucket names must be globally unique, so you might need a more complex generator
-        name: ${schema.spec.name}-unique-data-store
+        # FIX: Appending the parent WebApplication's Unique ID (metadata.uid) to the S3 name 
+        # guarantees global uniqueness, preventing the S3 creation failure.
+        name: ${schema.spec.name}-${metadata.uid}
